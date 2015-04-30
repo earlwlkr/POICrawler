@@ -38,9 +38,7 @@ class DDAOCrawler(DinerCrawler):
             link = anchor['href']
 
             details_response = self.session.get(link)
-            diner = self.get_diner_details(details_response)
-            diners.append(diner)
-        return diners
+            yield self.get_diner_details(details_response)
 
     # Returns a Diner from the details page.
     def get_diner_details(self, details_response):
@@ -80,7 +78,7 @@ class DDAOCrawler(DinerCrawler):
         }
 
         offset = 0
-        diners = []
+        count = 0
 
         while True:
             response = self.session.post(
@@ -89,12 +87,14 @@ class DDAOCrawler(DinerCrawler):
             if response.status_code != 200:
                 break
 
-            diners += self.extract_page_data(response)
-            if len(diners) % 10 == 0:
-                print('{} diners collected'.format(len(diners)))
-            if len(diners) >= 300:
-                break
+            for diner in self.extract_page_data(response):
+                count += 1
+                yield diner
+
+                if count % 10 == 0:
+                    print('{} diners collected'.format(count))
+                if count >= 30:
+                    return
+
             offset += 10
             data['offset'] = offset
-
-        return diners
