@@ -3,6 +3,8 @@ Lấy địa điểm yêu thích
 
 ## Thư viện
 
+Viết bằng Python 3.
+
 ```
 pip install requests
 ```
@@ -11,7 +13,7 @@ pip install requests
 pip install beautifulsoup4
 ```
 
-## Chạy code
+## Sử dụng code
 
 ```
 python run.py
