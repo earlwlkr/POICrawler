@@ -59,6 +59,7 @@ class FoodyVNCrawler(DinerCrawler):
     def crawl(self):
 
         data = {
+            'append': 'true',
             'page': 1
         }
         headers = {
