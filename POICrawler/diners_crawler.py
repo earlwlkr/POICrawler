@@ -74,6 +74,7 @@ class FoodyVNCrawler(DinerCrawler):
             restaurants = json.loads(response.text)['restaurants']
 
             for restaurant in restaurants:
+                foody_id = restaurant['Id']
                 name = restaurant['Name']
                 address = Address(
                     restaurant['Address'], restaurant['District'], restaurant['City'])
@@ -97,7 +98,7 @@ class FoodyVNCrawler(DinerCrawler):
                     print('Error with ' + link)
                     continue
 
-                yield Diner(name, address, phone,
+                yield Diner(foody_id, name, address, phone,
                             category, open_time, close_time, min_price, max_price)
 
             data['page'] += 1
