@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 
 from POICrawler.diner import Diner
 from POICrawler.requester import Requester
+from POICrawler.address import Address
 
 
 class DinerCrawler(object):
@@ -74,8 +75,8 @@ class FoodyVNCrawler(DinerCrawler):
 
             for restaurant in restaurants:
                 name = restaurant['Name']
-                address = restaurant['Address'] + ' ' +\
-                    restaurant['District'] + ' ' + restaurant['City']
+                address = Address(
+                    restaurant['Address'], restaurant['District'], restaurant['City'])
                 phone = restaurant['Phone']
                 category = restaurant['MainCategoryId'] + 2
 

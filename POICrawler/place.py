@@ -1,6 +1,6 @@
 class Place(object):
 
-    def __init__(self, name='', address='', phone='', category=None):
+    def __init__(self, name='', address=None, phone='', category=None):
         self.name = name
         self.address = address
         self.phone = phone
