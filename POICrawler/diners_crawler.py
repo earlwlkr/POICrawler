@@ -79,6 +79,12 @@ class FoodyVNCrawler(DinerCrawler):
                 address = Address(
                     restaurant['Address'], restaurant['District'], restaurant['City'])
                 phone = restaurant['Phone']
+
+                try:
+                    cuisine = restaurant['Cuisines'][0]['Name']
+                except IndexError:
+                    cuisine = 'Việt Nam'
+
                 category = restaurant['MainCategoryId'] + 2
 
                 link = 'http://www.foody.vn' + restaurant['DetailUrl']
@@ -99,7 +105,7 @@ class FoodyVNCrawler(DinerCrawler):
                     continue
 
                 yield Diner(foody_id, name, address, phone,
-                            category, open_time, close_time, min_price, max_price)
+                            category, cuisine, open_time, close_time, min_price, max_price)
 
             data['page'] += 1
 

@@ -16,6 +16,7 @@ def encode_diner(diner):
             "country": address.get_country()
         },
         "phone": diner.get_phone(),
+        "cuisine": diner.get_cuisine(),
         "open_time": diner.get_open_time(),
         "close_time": diner.get_close_time(),
         "price_min": diner.get_price_min(),
@@ -24,32 +25,35 @@ def encode_diner(diner):
 
 
 def main():
-    LIMIT = 1000
+    LIMIT = 5000
+    SAVE_TO_DATABASE = True
 
-    client = MongoClient()
-    db = client.cityhotspots
-
-    diners_collection = db.diners
+    if SAVE_TO_DATABASE:
+        client = MongoClient()
+        db = client.cityhotspots
+        db.drop_collection('diners')
+        diners_collection = db.diners
 
     diners_crawler = FoodyVNCrawler()
-    diners_crawler.crawl()
     out = open('example_output.txt', 'w', encoding='utf-8')
     count = 0
 
     for diner in diners_crawler.crawl():
         count += 1
-        out.write('STT: {}'.format(count) + '\n')
-        out.write('Foody ID: ' + str(diner.get_foody_id()) + '\n' +
+        out.write('STT: {}'.format(count) + '\n' +
+                  'Foody ID: ' + str(diner.get_foody_id()) + '\n' +
                   'Tên: ' + diner.get_name() + '\n' +
                   'Địa chỉ: ' + str(diner.get_address()) + '\n' +
                   'SĐT: ' + diner.get_phone() + '\n' +
                   'Danh mục: ' + diner.get_category_string() + '\n' +
+                  'Nền ẩm thực: ' + diner.get_cuisine() + '\n' +
                   'Giờ mở cửa: ' + diner.get_open_time_string() + ' - ' +
                   diner.get_close_time_string() + '\n' +
                   'Khoảng giá: ' + str(diner.get_price_min()) + ' - ' +
                   str(diner.get_price_max()) + '\n\n')
 
-        diners_collection.insert(encode_diner(diner))
+        if SAVE_TO_DATABASE:
+            diners_collection.insert(encode_diner(diner))
 
         print('{} diners collected.'.format(count))
         if count >= LIMIT:
