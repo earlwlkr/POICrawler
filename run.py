@@ -15,6 +15,7 @@ def encode_diner(diner):
             "city": address.get_city(),
             "country": address.get_country()
         },
+        "category": diner.get_category(),
         "phone": diner.get_phone(),
         "cuisine": diner.get_cuisine(),
         "open_time": diner.get_open_time(),
