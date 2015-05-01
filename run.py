@@ -1,7 +1,7 @@
 from POICrawler.diners_crawler import FoodyVNCrawler
 
 def main():
-    LIMIT = 500
+    LIMIT = 5
 
     diners_crawler = FoodyVNCrawler()
     diners_crawler.crawl()
@@ -13,9 +13,11 @@ def main():
         out.write('Tên: ' + diner.get_name() + '\n' +
                   'Địa chỉ: ' + diner.get_address() + '\n' +
                   'SĐT: ' + diner.get_phone() + '\n' +
-                  'Danh mục: ' + diner.get_category() + '\n' +
-                  'Giờ mở cửa: ' + diner.get_open_time() + '\n' +
-                  'Khoảng giá: ' + diner.get_price_range() + '\n\n')
+                  'Danh mục: ' + diner.get_category_string() + '\n' +
+                  'Giờ mở cửa: ' + diner.get_open_time_string() + ' - ' +
+                  diner.get_close_time_string() + '\n' +
+                  'Khoảng giá: ' + str(diner.get_price_min()) + ' - ' +
+                  str(diner.get_price_max()) + '\n\n')
 
         print('{} diners collected.'.format(count))
         if count >= LIMIT:
