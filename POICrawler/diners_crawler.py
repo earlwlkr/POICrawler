@@ -26,8 +26,20 @@ class FoodyVNCrawler(DinerCrawler):
     def __init__(self):
         super(FoodyVNCrawler, self).__init__()
 
+    # Chuyển giờ thành datetime (ví dụ 08:00 AM, 8am, ...)
     def parse_time(self, string):
-        return datetime.strptime(string, '%I:%M %p')
+        time = None
+        try:
+            time = datetime.strptime(string, '%I:%M %p')
+        except ValueError:
+            try:
+                time = datetime.strptime(string, '%I%p')
+            except ValueError:
+                try:
+                    time = datetime.strptime(string, '%I:%M%p')
+                except ValueError:
+                    time = datetime.strptime(string, '%I:%M')
+        return time
 
     def parse_price(self, string):
         min_price = None
@@ -80,7 +92,7 @@ class FoodyVNCrawler(DinerCrawler):
                     min_price, max_price = self.parse_price(soup.find(
                         'span', attrs={'itemprop': 'priceRange'}).find('span').text)
 
-                except AttributeError:
+                except (AttributeError, ValueError):
                     print('Error with ' + link)
                     continue
 
