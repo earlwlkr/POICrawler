@@ -1,6 +1,7 @@
 import os
 import re
 import json
+from datetime import datetime
 from bs4 import BeautifulSoup
 
 from POICrawler.diner import Diner
@@ -20,17 +21,27 @@ class DinerCrawler(object):
 
 class FoodyVNCrawler(DinerCrawler):
 
+    price_re = re.compile('\d+\.\d+\s')
+
     def __init__(self):
         super(FoodyVNCrawler, self).__init__()
 
-    def get_sub_category(self, id):
-        if id == 1:
-            return 'Nhà hàng'
-        if id == 2:
-            return 'Cà phê/Kem'
-        if id == 3:
-            return 'Quán ăn'
-        return 'Không tìm thấy ' + str(id)
+    def parse_time(self, string):
+        return datetime.strptime(string, '%I:%M %p')
+
+    def parse_price(self, string):
+        min_price = None
+        max_price = None
+
+        for match in self.price_re.findall(string):
+            match = match.replace('.', '')
+            if min_price is None:
+                min_price = int(match)
+            elif max_price is None:
+                max_price = int(match)
+            else:
+                break
+        return min_price, max_price
 
     def crawl(self):
 
@@ -54,26 +65,27 @@ class FoodyVNCrawler(DinerCrawler):
                 address = restaurant['Address'] + ' ' +\
                     restaurant['District'] + ' ' + restaurant['City']
                 phone = restaurant['Phone']
-                category = self.get_sub_category(restaurant['MainCategoryId'])
+                category = restaurant['MainCategoryId'] + 2
 
                 link = 'http://www.foody.vn' + restaurant['DetailUrl']
                 print('Requesting page {}'.format(link))
                 response = self.session.get(link)
                 soup = BeautifulSoup(response.text)
                 try:
-                    open_time = soup.find('span', attrs={'itemprop': 'opens'}).text + \
-                        ' - ' + \
-                        soup.find('span', attrs={'itemprop': 'closes'}).text
+                    open_time = self.parse_time(
+                        soup.find('span', attrs={'itemprop': 'opens'}).text)
+                    close_time = self.parse_time(
+                        soup.find('span', attrs={'itemprop': 'closes'}).text)
 
-                    price_range = soup.find(
-                        'span', attrs={'itemprop': 'priceRange'}).find('span').text
+                    min_price, max_price = self.parse_price(soup.find(
+                        'span', attrs={'itemprop': 'priceRange'}).find('span').text)
 
                 except AttributeError:
                     print('Error with ' + link)
                     continue
 
                 yield Diner(name, address, phone,
-                            category, open_time, price_range)
+                            category, open_time, close_time, min_price, max_price)
 
             data['page'] += 1
 
@@ -83,9 +95,9 @@ class FoodyVNCrawler(DinerCrawler):
 #     def __init__(self):
 #         super(DDAOCrawler, self).__init__()
 
-#     # Returns all Diners from URL response.
-#     # It gets link from the 'desc' div,
-#     # goes to link and get diner's details.
+# Returns all Diners from URL response.
+# It gets link from the 'desc' div,
+# goes to link and get diner's details.
 #     def extract_page_data(self, response):
 #         main_soup = BeautifulSoup(response.text)
 #         diners = []
@@ -100,7 +112,7 @@ class FoodyVNCrawler(DinerCrawler):
 #             details_response = self.session.get(link)
 #             yield self.get_diner_details(details_response)
 
-#     # Returns a Diner from the details page.
+# Returns a Diner from the details page.
 #     def get_diner_details(self, details_response):
 #         soup = BeautifulSoup(details_response.text)
 
@@ -111,8 +123,8 @@ class FoodyVNCrawler(DinerCrawler):
 #         anchor = description.find('a', class_='place-category')
 #         category = anchor.string
 
-#         # Has to call next_sibling 2 times because:
-#         # http://www.crummy.com/software/BeautifulSoup/bs4/doc/#next-sibling-and-previous-sibling
+# Has to call next_sibling 2 times because:
+# http://www.crummy.com/software/BeautifulSoup/bs4/doc/#next-sibling-and-previous-sibling
 #         anchor = anchor.next_sibling.next_sibling
 #         address = anchor.span.next.string.strip()
 
@@ -122,7 +134,7 @@ class FoodyVNCrawler(DinerCrawler):
 #         anchor = description.find('div', class_='block')
 #         open_time = anchor.find('ul', class_='bullet').li.string
 
-#         # Skip phần comment (<!-- /.block -->)
+# Skip phần comment (<!-- /.block -->)
 #         anchor = anchor.next_sibling.next_sibling.next_sibling
 #         price_range = anchor.find('strong').string
 
