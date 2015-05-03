@@ -2,6 +2,7 @@ import os
 import re
 import json
 from datetime import datetime
+from datetime import timedelta
 from bs4 import BeautifulSoup
 
 from POICrawler.diner import Diner
@@ -97,6 +98,9 @@ class FoodyVNCrawler(DinerCrawler):
                         soup.find('span', attrs={'itemprop': 'opens'}).text)
                     close_time = self.parse_time(
                         soup.find('span', attrs={'itemprop': 'closes'}).text)
+
+                    if close_time <= open_time:
+                        close_time += timedelta(days=1)
 
                     min_price, max_price = self.parse_price(soup.find(
                         'span', attrs={'itemprop': 'priceRange'}).find('span').text)
