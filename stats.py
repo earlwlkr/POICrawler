@@ -20,12 +20,12 @@ def main():
 
     out.write('## Các nền ẩm thực\n')
     for cuisine in cuisines:
-        out.write(cuisine + '\n')
+        out.write(cuisine + '<br>\n')
     out.write('\n')
 
     out.write('## Số quán ăn mỗi quận\n')
     for item in diners_per_district.items():
-        out.write(item[0] + ': ' + str(item[1]) + '\n')
+        out.write(item[0] + ': ' + str(item[1]) + '<br>\n')
 
     out.close()
 
