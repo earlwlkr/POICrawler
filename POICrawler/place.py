@@ -17,12 +17,3 @@ class Place(object):
 
     def get_category(self):
         return self.category
-
-    def get_category_string(self):
-        if self.category == 3:
-            return 'Nhà hàng'
-        if self.category == 4:
-            return 'Cà phê/Kem'
-        if self.category == 5:
-            return 'Quán ăn'
-        return 'Undefined ' + str(self.category)
