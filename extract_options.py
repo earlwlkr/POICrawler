@@ -13,21 +13,21 @@ def main():
     doc['cuisines'] = diners_collection.distinct('cuisine')
     doc['districts'] = diners_collection.distinct('address.district')
 
-    doc['max_price'] = list(diners_collection.aggregate([{
+    doc['price_max'] = list(diners_collection.aggregate([{
         "$group":
             {
                 "_id": None,
-                "max": {"$max": "$price_max"}
+                "value": {"$max": "$price_max"}
             }
-    }]))[0]['max']
-    doc['min_price'] = list(diners_collection.aggregate([{
+    }]))[0]['value']
+    doc['price_min'] = list(diners_collection.aggregate([{
         "$group":
             {
                 "_id": None,
-                "min": {"$min": "$price_min"}
+                "value": {"$min": "$price_min"}
             }
-    }]))[0]['min']
-    
+    }]))[0]['value']
+
     diner_options_collection.insert(doc)
 
 
