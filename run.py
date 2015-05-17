@@ -61,14 +61,5 @@ def main():
             break
     out.close()
 
-    diner_options_collection = db.dineroptions
-    categories = diners_collection.distinct('category')
-    cuisines = diners_collection.distinct('cuisine')
-    districts = diners_collection.distinct('district')
-    diner_options_collection.insert(categories)
-    diner_options_collection.insert(cuisines)
-    diner_options_collection.insert(districts)
-
-
 if __name__ == '__main__':
     main()

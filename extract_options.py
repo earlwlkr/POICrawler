@@ -11,7 +11,7 @@ def main():
     diner_options_collection = db.dineroptions
     doc['categories'] = diners_collection.distinct('category')
     doc['cuisines'] = diners_collection.distinct('cuisine')
-    doc['districts'] = diners_collection.distinct('district')
+    doc['districts'] = diners_collection.distinct('address.district')
     diner_options_collection.insert(doc)
 
 
