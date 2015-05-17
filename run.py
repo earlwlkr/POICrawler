@@ -26,7 +26,7 @@ def encode_diner(diner):
 
 
 def main():
-    LIMIT = 5000
+    LIMIT = 3000
     SAVE_TO_DATABASE = True
 
     if SAVE_TO_DATABASE:
@@ -46,7 +46,7 @@ def main():
                   'Tên: ' + diner.get_name() + '\n' +
                   'Địa chỉ: ' + str(diner.get_address()) + '\n' +
                   'SĐT: ' + diner.get_phone() + '\n' +
-                  'Danh mục: ' + diner.get_category_string() + '\n' +
+                  'Danh mục: ' + diner.get_category() + '\n' +
                   'Nền ẩm thực: ' + diner.get_cuisine() + '\n' +
                   'Giờ mở cửa: ' + diner.get_open_time_string() + ' - ' +
                   diner.get_close_time_string() + '\n' +
@@ -60,6 +60,14 @@ def main():
         if count >= LIMIT:
             break
     out.close()
+
+    diner_options_collection = db.dineroptions
+    categories = diners_collection.distinct('category')
+    cuisines = diners_collection.distinct('cuisine')
+    districts = diners_collection.distinct('district')
+    diner_options_collection.insert(categories)
+    diner_options_collection.insert(cuisines)
+    diner_options_collection.insert(districts)
 
 
 if __name__ == '__main__':
