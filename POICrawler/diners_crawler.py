@@ -87,13 +87,13 @@ class FoodyVNCrawler(DinerCrawler):
                 except IndexError:
                     cuisine = 'Việt Nam'
 
-                category = restaurant['MainCategoryId'] + 2
-
                 link = 'http://www.foody.vn' + restaurant['DetailUrl']
                 print('Requesting page {}'.format(link))
                 response = self.session.get(link)
                 soup = BeautifulSoup(response.text)
                 try:
+                    category = soup.find(
+                        'div', style='float: left; padding: 2px 5px 0px 0; color: #888;').a['title']
                     open_time = self.parse_time(
                         soup.find('span', attrs={'itemprop': 'opens'}).text)
                     close_time = self.parse_time(
