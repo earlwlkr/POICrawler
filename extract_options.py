@@ -10,8 +10,11 @@ def main():
     doc = {}
     diner_options_collection = db.dineroptions
     doc['categories'] = diners_collection.distinct('category')
+    doc['categories'].insert(0, 'Tất cả')
     doc['cuisines'] = diners_collection.distinct('cuisine')
+    doc['cuisines'].insert(0, 'Tất cả')
     doc['districts'] = diners_collection.distinct('address.district')
+    doc['districts'].insert(0, 'Tất cả')
 
     doc['price_max'] = list(diners_collection.aggregate([{
         "$group":
