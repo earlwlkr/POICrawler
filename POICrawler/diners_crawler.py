@@ -23,7 +23,7 @@ class DinerCrawler(object):
 
 class FoodyVNCrawler(DinerCrawler):
 
-    price_re = re.compile('\d+\.\d+\s')
+    price_re = re.compile('\d+\.\d+đ')
 
     def __init__(self):
         super(FoodyVNCrawler, self).__init__()
@@ -48,7 +48,8 @@ class FoodyVNCrawler(DinerCrawler):
         max_price = None
 
         for match in self.price_re.findall(string):
-            match = match.replace('.', '')
+            match = match.replace('.', '').replace('đ', '')
+
             if min_price is None:
                 min_price = int(match)
             elif max_price is None:
@@ -80,7 +81,10 @@ class FoodyVNCrawler(DinerCrawler):
                 name = restaurant['Name']
                 address = Address(
                     restaurant['Address'], restaurant['District'], restaurant['City'])
-                phone = restaurant['Phone']
+
+                phone_response = self.session.get('http://www.foody.vn/Restaurant/GetPhoneByResId', params={'resId': foody_id})
+                phone_json = json.loads(phone_response.text)
+                phone = phone_json['phone']
 
                 try:
                     cuisine = restaurant['Cuisines'][0]['Name']
@@ -91,6 +95,7 @@ class FoodyVNCrawler(DinerCrawler):
                 print('Requesting page {}'.format(link))
                 response = self.session.get(link)
                 soup = BeautifulSoup(response.text)
+
                 try:
                     category = soup.find(
                         'div', style='float: left; padding: 2px 5px 0px 0; color: #888;').a['title']

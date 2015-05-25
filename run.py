@@ -26,7 +26,7 @@ def encode_diner(diner):
 
 
 def main():
-    LIMIT = 3000
+    LIMIT = 20000
     SAVE_TO_DATABASE = True
 
     if SAVE_TO_DATABASE:
