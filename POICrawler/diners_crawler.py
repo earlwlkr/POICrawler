@@ -127,7 +127,7 @@ class FoodyVNCrawler(DinerCrawler):
                     if extracted_info is None:
                         continue
                     yield extracted_info
-                extracted_main_info = self.extract_item_info(sub_item)
+                extracted_main_info = self.extract_item_info(item)
                 if extracted_main_info is None:
                     continue
                 yield extracted_main_info
