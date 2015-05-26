@@ -48,8 +48,8 @@ def encode_cinema(cinema):
 
 def main():
     DINERS_LIMIT = 28000
+    crawl_cinemas()
     crawl_diners(DINERS_LIMIT)
-    crawl_cinemas
 
 
 def crawl_diners(limit):
@@ -71,6 +71,7 @@ def crawl_diners(limit):
         print('{} diners collected.'.format(count))
         if count >= limit:
             break
+    print('Finished getting diners.')
 
 
 def crawl_cinemas():
@@ -84,6 +85,8 @@ def crawl_cinemas():
         obj = encode_cinema(cinema)
         cinemas_collection.replace_one(
             {'foody_id': cinema.get_foody_id()}, obj, upsert=True)
+
+    print('Finished getting cinemas.')
 
 
 if __name__ == '__main__':
