@@ -26,7 +26,7 @@ def encode_diner(diner):
 
 
 def main():
-    LIMIT = 20000
+    LIMIT = 28000
     SAVE_TO_DATABASE = True
 
     if SAVE_TO_DATABASE:
@@ -54,7 +54,9 @@ def main():
                   str(diner.get_price_max()) + '\n\n')
 
         if SAVE_TO_DATABASE:
-            diners_collection.insert(encode_diner(diner))
+            obj = encode_diner(diner)
+            diners_collection.replace_one({'foody_id': diner.get_foody_id()}, obj, upsert=True)
+            #diners_collection.insert(encode_diner(diner))
 
         print('{} diners collected.'.format(count))
         if count >= LIMIT:
