@@ -62,6 +62,7 @@ class FoodyVNCrawler(DinerCrawler):
 
         data = {
             'append': 'true',
+            'c': '1,2,3,4,6,11,12,39',
             'page': 1
         }
         headers = {
@@ -98,7 +99,7 @@ class FoodyVNCrawler(DinerCrawler):
 
                 try:
                     category = soup.find(
-                        'div', style='float: left; padding: 2px 5px 0px 0; color: #888;').a['title']
+                        'div', class_='category-items').a['title']
                     open_time = self.parse_time(
                         soup.find('span', attrs={'itemprop': 'opens'}).text)
                     close_time = self.parse_time(
