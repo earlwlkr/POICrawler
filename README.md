@@ -49,7 +49,22 @@ Ví dụ một đối tượng ```Diner```:
 }
 ```
 
+## Server
 
+http://cityhotspots-46171.onmodulus.net/diners
+
+Các tham số:
+
+- cuisine: nền ẩm thực (nằm trong danh sách [này](https://github.com/earlwlkr/POICrawler/blob/master/STATS.md))
+- district: quận (cũng nằm trong danh sách trên)
+- category: danh mục quán ăn (3: Nhà hàng, 4: Cà phê/Kem, 5: Quán ăn)
+- price_min: giá tối thiểu
+- price_max: giá tối đa
+- time_arrival: giờ đến (quán ăn trả về sẽ có giờ mở cửa sớm hơn và giờ đóng cửa trễ hơn giờ này)
+
+Bạn có thể gọi đường dẫn này để xem các tùy chọn hiện có:
+
+http://cityhotspots-46171.onmodulus.net/diners
 
 ## Giấy phép
 
