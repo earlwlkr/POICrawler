@@ -58,6 +58,50 @@ class FoodyVNCrawler(DinerCrawler):
                 break
         return min_price, max_price
 
+    def extract_item_info(self, item):
+        foody_id = item['Id']
+        name = item['Name']
+        address = Address(
+            item['Address'], item['District'], item['City'])
+
+        phone_response = self.session.get(
+            'http://www.foody.vn/Restaurant/GetPhoneByResId', params={'resId': foody_id})
+        phone_json = json.loads(phone_response.text)
+        phone = phone_json['phone']
+
+        rating = item['AvgRating']
+
+        try:
+            cuisine = item['Cuisines'][0]['Name']
+        except IndexError:
+            cuisine = 'Việt Nam'
+
+        link = 'http://www.foody.vn' + item['DetailUrl']
+        print('Requesting page {}'.format(link))
+        response = self.session.get(link)
+        soup = BeautifulSoup(response.text)
+
+        try:
+            category = soup.find(
+                'div', class_='category-items').a['title']
+            open_time = self.parse_time(
+                soup.find('span', attrs={'itemprop': 'opens'}).text)
+            close_time = self.parse_time(
+                soup.find('span', attrs={'itemprop': 'closes'}).text)
+
+            if close_time <= open_time:
+                close_time += timedelta(days=1)
+
+            min_price, max_price = self.parse_price(soup.find(
+                'span', attrs={'itemprop': 'priceRange'}).find('span').text)
+
+        except (AttributeError, ValueError):
+            print('Error with ' + link)
+            return None
+
+        return Diner(foody_id, rating, name, address, phone,
+                     category, cuisine, open_time, close_time, min_price, max_price)
+
     def crawl(self):
 
         data = {
@@ -75,49 +119,18 @@ class FoodyVNCrawler(DinerCrawler):
             if response.status_code != 200:
                 return
 
-            restaurants = json.loads(response.text)['restaurants']
+            items = json.loads(response.text)['restaurants']
 
-            for restaurant in restaurants:
-                foody_id = restaurant['Id']
-                name = restaurant['Name']
-                address = Address(
-                    restaurant['Address'], restaurant['District'], restaurant['City'])
-
-                phone_response = self.session.get('http://www.foody.vn/Restaurant/GetPhoneByResId', params={'resId': foody_id})
-                phone_json = json.loads(phone_response.text)
-                phone = phone_json['phone']
-
-                try:
-                    cuisine = restaurant['Cuisines'][0]['Name']
-                except IndexError:
-                    cuisine = 'Việt Nam'
-
-                link = 'http://www.foody.vn' + restaurant['DetailUrl']
-                print('Requesting page {}'.format(link))
-                response = self.session.get(link)
-                soup = BeautifulSoup(response.text)
-
-                try:
-                    category = soup.find(
-                        'div', class_='category-items').a['title']
-                    open_time = self.parse_time(
-                        soup.find('span', attrs={'itemprop': 'opens'}).text)
-                    close_time = self.parse_time(
-                        soup.find('span', attrs={'itemprop': 'closes'}).text)
-
-                    if close_time <= open_time:
-                        close_time += timedelta(days=1)
-
-                    min_price, max_price = self.parse_price(soup.find(
-                        'span', attrs={'itemprop': 'priceRange'}).find('span').text)
-
-                except (AttributeError, ValueError):
-                    print('Error with ' + link)
+            for item in items:
+                for sub_item in item['SubItems']:
+                    extracted_info = self.extract_item_info(sub_item)
+                    if extracted_info is None:
+                        continue
+                    yield extracted_info
+                extracted_main_info = self.extract_item_info(sub_item)
+                if extracted_main_info is None:
                     continue
-
-                yield Diner(foody_id, name, address, phone,
-                            category, cuisine, open_time, close_time, min_price, max_price)
-
+                yield extracted_main_info
             data['page'] += 1
 
 
