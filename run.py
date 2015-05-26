@@ -62,15 +62,17 @@ def crawl_diners(limit):
     count = 0
 
     for diner in diners_crawler.crawl():
-        count += 1
-
+        
         obj = encode_diner(diner)
-        diners_collection.replace_one(
+        result = diners_collection.replace_one(
             {'foody_id': diner.get_foody_id()}, obj, upsert=True)
 
-        print('{} diners collected.'.format(count))
-        if count >= limit:
-            break
+        if result.upserted_id is not None:
+            count += 1
+            print('{} diners collected.'.format(count))
+            if count >= limit:
+                break
+
     print('Finished getting diners.')
 
 
