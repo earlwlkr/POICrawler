@@ -34,27 +34,27 @@ Trung Đông<br>
 Nha Trang<br>
 
 ## Số quán ăn mỗi quận
-Bình Chánh: 23<br>
-Quận 8: 61<br>
-Cần Giờ: 3<br>
-Quận 12: 35<br>
-Quận 10: 439<br>
-Quận Tân Phú: 158<br>
-Quận 1: 1243<br>
-Quận Gò Vấp: 231<br>
-Quận Bình Thạnh: 383<br>
-Quận 6: 84<br>
-Quận Phú Nhuận: 335<br>
-Hóc Môn: 15<br>
-Quận 4: 109<br>
-Quận 3: 617<br>
-Củ Chi: 9<br>
-Quận 7: 193<br>
-Quận Bình Tân: 30<br>
-Quận Thủ Đức: 115<br>
+Quận 2: 74<br>
+Nhà Bè: 7<br>
+Quận Tân Bình: 367<br>
 Quận 9: 32<br>
 Quận 11: 189<br>
-Nhà Bè: 7<br>
+Quận 10: 439<br>
+Bình Chánh: 23<br>
+Quận 7: 193<br>
+Quận Phú Nhuận: 335<br>
+Quận 6: 84<br>
+Quận 4: 109<br>
+Cần Giờ: 3<br>
+Quận 8: 61<br>
+Quận Gò Vấp: 231<br>
+Quận Bình Thạnh: 383<br>
+Quận Tân Phú: 158<br>
 Quận 5: 248<br>
-Quận Tân Bình: 367<br>
-Quận 2: 74<br>
+Quận Bình Tân: 30<br>
+Quận 1: 1243<br>
+Quận 3: 617<br>
+Quận 12: 35<br>
+Quận Thủ Đức: 115<br>
+Củ Chi: 9<br>
+Hóc Môn: 15<br>
