@@ -16,20 +16,8 @@ def main():
     doc['districts'] = diners_collection.distinct('address.district')
     doc['districts'].insert(0, 'Tất cả')
 
-    doc['price_max'] = list(diners_collection.aggregate([{
-        "$group":
-            {
-                "_id": None,
-                "value": {"$max": "$price_max"}
-            }
-    }]))[0]['value']
-    doc['price_min'] = list(diners_collection.aggregate([{
-        "$group":
-            {
-                "_id": None,
-                "value": {"$min": "$price_min"}
-            }
-    }]))[0]['value']
+    doc['price_max'] = diners_collection.find_one(sort=[("price_max", -1)])['price_max']
+    doc['price_min'] = diners_collection.find_one(sort=[("price_min", 1)])['price_min']
 
     diner_options_collection.insert(doc)
 
