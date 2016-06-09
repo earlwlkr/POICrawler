@@ -119,7 +119,7 @@ class FoodyVNCrawler(DinerCrawler):
             if response.status_code != 200:
                 return
 
-            items = json.loads(response.text)['restaurants']
+            items = json.loads(response.text)['searchItems']
 
             for item in items:
                 for sub_item in item['SubItems']:
